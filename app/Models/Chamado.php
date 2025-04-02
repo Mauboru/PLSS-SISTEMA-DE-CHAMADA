@@ -2,30 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Chamado extends Model {
     use HasFactory;
 
     protected $table = 'plss_chamados'; 
-    public $timestamps = false;
-
-    protected $fillable = [
-        'titulo',
-        'categoria_id',
-        'descricao',
-        'prazo_solucao',
-        'situacao_id',
-        'data_criacao',
-        'data_solucao'
+    protected $fillable = ['titulo', 'categoria_id', 'descricao', 'prazo_solucao', 'situacao_id', 'created_at', 'situacao', 'data_solucao'];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'prazo_solucao' => 'datetime',
     ];
 
     public function categoria() {
         return $this->belongsTo(Categoria::class);
     }
 
-    // public function situacao() {
-    //     return $this->belongsTo(Situacao::class);
-    // }
+    public function situacao() {
+        return $this->belongsTo(Situacao::class);
+    }
 }

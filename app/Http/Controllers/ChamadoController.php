@@ -6,21 +6,32 @@ use Illuminate\Http\Request;
 use App\Models\Chamado;
 
 class ChamadoController extends Controller {
-    public function index() {
-        $chamados = Chamado::all();
+    public function index(Request $request) {
+        $sort = $request->get('sort', 'created_at'); 
+        $order = $request->get('order', 'desc'); 
+    
+        $query = Chamado::with(['categoria', 'situacao']);
+    
+        if ($sort === 'situacao') {
+            $query->leftJoin('plss_situacoes', 'plss_chamados.situacao_id', '=', 'plss_situacoes.id')
+                  ->orderBy('plss_situacoes.nome', $order)
+                  ->select('plss_chamados.*'); 
+        } else {
+            $query->orderBy($sort, $order);
+        }
+        $chamados = $query->paginate(10)->appends(request()->query());
         return view('chamados.index', compact('chamados'));
     }
 
     public function create() {
         return view('chamados.create');
-    }
+    }    
 
     public function store(Request $request) {
         $request->validate([
             'titulo' => 'required|string|max:255',
-            'categoria_id' => 'required|exists:categorias,id',
+            'categoria_id' => 'required|exists:plss_categorias,id',
             'descricao' => 'required|string',
-            'prazo_solucao' => 'date',
         ]);
 
         Chamado::create([
@@ -28,8 +39,8 @@ class ChamadoController extends Controller {
             'categoria_id' => $request->categoria_id,
             'descricao' => $request->descricao,
             'prazo_solucao' => now()->addDays(3),
-            'situacao' => 'Novo',
-            'data_criacao' => now(),
+            'situacao_id' => 3,
+            'created_at' => now(),
         ]);
 
         return redirect()->route('chamados.index')->with('success', 'Chamado criado com sucesso!');
@@ -45,14 +56,13 @@ class ChamadoController extends Controller {
 
     public function update(Request $request, Chamado $chamado) {
         $request->validate([
-            'situacao' => 'required|in:Pendente,Resolvido',
+            'situacao_id' => 'required|integer|exists:plss_situacoes,id',
         ]);
-
-        $chamado->update([
-            'situacao' => $request->situacao,
-            'data_solucao' => $request->situacao === 'Resolvido' ? now() : null,
-        ]);
-
+    
+        $chamado->situacao_id = $request->situacao_id;
+        $chamado->data_solucao = $request->situacao_id == 2 ? now() : null;
+        $chamado->save();
+    
         return redirect()->route('chamados.index')->with('success', 'Chamado atualizado com sucesso!');
     }
 

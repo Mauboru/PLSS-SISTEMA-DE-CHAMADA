@@ -21,35 +21,69 @@
     @endif
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Cadastrar um Novo Chamado</h2>
+        <h2 class="mb-0">Lista de Chamados</h2>
+        <a href="{{ route('chamados.create') }}" class="btn btn-success">+ Criar Chamado</a>
     </div>
 
-    <div class="container">
-        <h2>Criar Chamado</h2>
-        <form action="{{ route('chamados.store') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label for="titulo" class="form-label">Título</label>
-                <input type="text" name="titulo" id="titulo" class="form-control" required>
-            </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered text-center align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>Título</th>
+                    <th>Categoria</th>
+                    <th>Descrição</th>
+                    <th>
+                        <a href="{{ route('chamados.index', ['sort' => 'situacao', 'order' => request('order') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
+                            Situação ▼
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('chamados.index', ['sort' => 'created_at', 'order' => request('order') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
+                            Data de Criação ▼
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('chamados.index', ['sort' => 'prazo_solucao', 'order' => request('order') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
+                            Prazo de Solução ▼
+                        </a>
+                    </th>
+                    <th>Data de Solução</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($chamados as $chamado)
+                    <tr>
+                        <td>{{ $chamado->titulo }}</td>
+                        <td>{{ $chamado->categoria->nome }}</td>
+                        <td>{{ Str::limit($chamado->descricao, 50) }}</td>
+                        <td>{{ $chamado->situacao->nome }}</td>
+                        <td>{{ $chamado->created_at->format('d/m/Y') }}</td>
+                        <td>{{ $chamado->prazo_solucao->format('d/m/Y') }}</td>
+                        <td>{{ optional($chamado->data_solucao)->format('d/m/Y') ?? 'Não resolvido' }}</td>
+                        <td>
+                            <a href="{{ route('chamados.show', $chamado->id) }}" class="btn btn-primary btn-sm">Visualizar</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Nenhum chamado encontrado.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-            <div class="mb-3">
-                <label for="categoria_id" class="form-label">Categoria</label>
-                <select name="categoria_id" id="categoria_id" class="form-control" required>
-                    @foreach(App\Models\Categoria::all() as $categoria)
-                        <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="descricao" class="form-label">Descrição</label>
-                <textarea name="descricao" id="descricao" class="form-control" required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-success">Criar</button>
-        </form>
+    {{-- Paginação --}}
+    <div class="d-flex justify-content-center mt-3">
+        {{ $chamados->appends(request()->query())->links() }}
     </div>
 </div>
+
+<style>
+    table {
+        user-select: none;
+    }
+</style>
 
 @endsection
