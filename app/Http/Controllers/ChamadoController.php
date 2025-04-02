@@ -39,7 +39,7 @@ class ChamadoController extends Controller {
             'categoria_id' => $request->categoria_id,
             'descricao' => $request->descricao,
             'prazo_solucao' => now()->addDays(3),
-            'situacao_id' => 3,
+            'situacao_id' => 1,
             'created_at' => now(),
         ]);
 

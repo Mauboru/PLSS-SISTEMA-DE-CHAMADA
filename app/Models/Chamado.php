@@ -13,6 +13,7 @@ class Chamado extends Model {
     protected $casts = [
         'created_at' => 'datetime',
         'prazo_solucao' => 'datetime',
+        'data_solucao' => 'datetime',
     ];
 
     public function categoria() {

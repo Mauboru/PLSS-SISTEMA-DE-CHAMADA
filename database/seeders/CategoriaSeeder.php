@@ -2,10 +2,20 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
-DB::table('plss_categorias')->insert([
-    ['nome' => 'Pendente', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-    ['nome' => 'Resolvido', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-]);
+class CategoriaSeeder extends Seeder {
+    public function run() {
+        $categorias = [
+            ['nome' => 'Suporte'],
+            ['nome' => 'Infraestrutura'],
+            ['nome' => 'Software'],
+            ['nome' => 'Hardware'],
+            ['nome' => 'Redes'],
+            ['nome' => 'Outros'],
+        ];
+
+        DB::table('plss_categorias')->insert($categorias);
+    }
+}

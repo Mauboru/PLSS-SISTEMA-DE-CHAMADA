@@ -4,4 +4,5 @@
 - php artisan key:generate (caso faça um .env do zero)
 - php artisan migrate
 - php artisan db:seed --class=CategoriaSeeder
+- php artisan db:seed --class=SituacaoSeeder
 - php artisan serve

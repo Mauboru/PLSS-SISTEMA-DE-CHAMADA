@@ -60,9 +60,13 @@
                         <td>{{ $chamado->situacao->nome }}</td>
                         <td>{{ $chamado->created_at->format('d/m/Y') }}</td>
                         <td>{{ $chamado->prazo_solucao->format('d/m/Y') }}</td>
-                        <td>{{ optional($chamado->data_solucao)->format('d/m/Y') ?? 'Não resolvido' }}</td>
+                        <td>{{ $chamado->data_solucao ? $chamado->data_solucao->format('d/m/Y') : 'Não resolvido' }}</td>
                         <td>
-                            <a href="{{ route('chamados.show', $chamado->id) }}" class="btn btn-primary btn-sm">Visualizar</a>
+                            @if($chamado->data_solucao)
+                                <span class="text-success fs-4">✔️</span>
+                            @else
+                                <a href="{{ route('chamados.show', $chamado->id) }}" class="btn btn-primary btn-sm">Visualizar</a>
+                            @endif
                         </td>
                     </tr>
                 @empty

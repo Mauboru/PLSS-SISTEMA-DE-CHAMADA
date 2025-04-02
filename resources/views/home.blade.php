@@ -37,7 +37,6 @@
     </div>
 </div>
 
-
 <style>
     .card-hover {
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -63,9 +62,8 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Dados falsos para Chamados por Categoria
-        var categorias = ["Suporte", "Infraestrutura", "Software", "Hardware", "Outros"];
-        var chamadosPorCategoria = [30, 20, 50, 15, 10];
+        var categorias = @json($categorias->pluck('nome')); 
+        var chamadosPorCategoria = @json($categorias->map(fn($categoria) => $categoria->chamados->count())); 
 
         var ctx1 = document.getElementById('chamadosChart').getContext('2d');
         new Chart(ctx1, {
@@ -87,10 +85,8 @@
                 }
             }
         });
-
-        // Dados falsos para SLA
-        var totalChamados = 100;
-        var chamadosNoPrazo = 75;
+        var totalChamados = @json($totalChamados);
+        var chamadosNoPrazo = @json($chamadosNoPrazo);
         var chamadosForaDoPrazo = totalChamados - chamadosNoPrazo;
 
         var ctx2 = document.getElementById('slaChart').getContext('2d');
@@ -104,7 +100,18 @@
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                let value = tooltipItem.raw;
+                                let percent = ((value / totalChamados) * 100).toFixed(2) + '%';
+                                return `${tooltipItem.label}: ${percent}`;
+                            }
+                        }
+                    }
+                }
             }
         });
     });
