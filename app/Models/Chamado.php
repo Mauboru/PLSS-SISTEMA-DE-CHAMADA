@@ -21,9 +21,9 @@ class Chamado extends Model {
         'data_solucao'
     ];
 
-    // public function categoria() {
-    //     return $this->belongsTo(Categoria::class);
-    // }
+    public function categoria() {
+        return $this->belongsTo(Categoria::class);
+    }
 
     // public function situacao() {
     //     return $this->belongsTo(Situacao::class);
