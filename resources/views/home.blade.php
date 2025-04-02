@@ -14,7 +14,7 @@
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-md-2">
-            <a href="#" class="text-decoration-none">
+            <a href="{{ route('chamados.index') }}" class="text-decoration-none">
                 <div class="card card-hover">
                     <img src="https://cdn-icons-png.flaticon.com/512/3649/3649789.png" class="card-img-top custom-img">
                     <h4 class="custom-title">Chamados</h4>
