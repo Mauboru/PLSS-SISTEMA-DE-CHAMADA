@@ -1,2 +1,6 @@
 # PLSS-SISTEMA-DE-CHAMADA
-Sistema desenvolvido para avalicao tecnica da PLSS
+
+- composer install
+- php artisan key:generate (caso faça um .env do zero)
+- php artisan migrate
+- php artisan serve
