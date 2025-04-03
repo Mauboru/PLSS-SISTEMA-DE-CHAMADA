@@ -85,29 +85,52 @@
                 }
             }
         });
+        
         var totalChamados = @json($totalChamados);
-        var chamadosNoPrazo = @json($chamadosNoPrazo);
-        var chamadosForaDoPrazo = totalChamados - chamadosNoPrazo;
+        var chamadosResolvidosNoPrazo = @json($chamadosNoPrazo);
+        var chamadosResolvidosForaDoPrazo = @json($chamadosForaPrazo);
+        var chamadosNaoResolvidos = totalChamados - (chamadosResolvidosNoPrazo + chamadosResolvidosForaDoPrazo);
 
         var ctx2 = document.getElementById('slaChart').getContext('2d');
         new Chart(ctx2, {
             type: 'doughnut',
             data: {
-                labels: ['Resolvidos no Prazo', 'Fora do Prazo'],
+                labels: ['Resolvidos no Prazo', 'Resolvidos Fora do Prazo', 'Não Resolvidos'],
                 datasets: [{
-                    data: [chamadosNoPrazo, chamadosForaDoPrazo],
-                    backgroundColor: ['#28a745', '#dc3545']
+                    data: [chamadosResolvidosNoPrazo, chamadosResolvidosForaDoPrazo, chamadosNaoResolvidos],
+                    backgroundColor: ['#28a745', '#dc3545', '#ffc107']
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function (tooltipItem) {
-                                let value = tooltipItem.raw;
-                                let percent = ((value / totalChamados) * 100).toFixed(2) + '%';
-                                return `${tooltipItem.label}: ${percent}`;
+                            label: function(tooltipItem) {
+                                let dataset = tooltipItem.dataset.data;
+                                let total = dataset.reduce((acc, value) => acc + value, 0);
+                                let valor = dataset[tooltipItem.dataIndex];
+                                let porcentagem = ((valor / total) * 100).toFixed(2);
+                                return `${tooltipItem.label}: ${porcentagem}%`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            generateLabels: function(chart) {
+                                let data = chart.data.datasets[0].data;
+                                let total = data.reduce((acc, value) => acc + value, 0);
+                                return chart.data.labels.map((label, i) => {
+                                    let value = data[i];
+                                    let percentage = ((value / total) * 100).toFixed(2);
+                                    return {
+                                        text: `${label}: ${percentage}%`,
+                                        fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                        hidden: isNaN(value) || value <= 0
+                                    };
+                                });
                             }
                         }
                     }
