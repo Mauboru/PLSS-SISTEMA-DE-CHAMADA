@@ -9,8 +9,9 @@ class SituacaoSeeder extends Seeder {
 
     public function run() {
         $situacoes = [
-            ['id' => 1, 'nome' => 'Pendente'],
-            ['id' => 2, 'nome' => 'Resolvido'],
+            ['id' => 1, 'nome' => 'Novo'],
+            ['id' => 2, 'nome' => 'Pendente'],
+            ['id' => 3, 'nome' => 'Resolvido'],
         ];
         DB::table('plss_situacoes')->insert($situacoes);
     }

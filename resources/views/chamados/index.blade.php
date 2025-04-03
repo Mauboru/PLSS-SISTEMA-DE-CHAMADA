@@ -22,7 +22,9 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Lista de Chamados</h2>
-        <a href="{{ route('chamados.create') }}" class="btn btn-success">+ Criar Chamado</a>
+        <a href="{{ route('chamados.create') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Criar Chamado
+        </a>
     </div>
 
     <div class="table-responsive">
@@ -34,17 +36,17 @@
                     <th>Descrição</th>
                     <th>
                         <a href="{{ route('chamados.index', ['sort' => 'situacao', 'order' => request('order') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
-                            Situação ▼
+                            Situação {!! request('order') === 'asc' ? '🔼' : '🔽' !!}
                         </a>
                     </th>
                     <th>
                         <a href="{{ route('chamados.index', ['sort' => 'created_at', 'order' => request('order') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
-                            Data de Criação ▼
+                            Criado em {!! request('order') === 'asc' ? '🔼' : '🔽' !!}
                         </a>
                     </th>
                     <th>
                         <a href="{{ route('chamados.index', ['sort' => 'prazo_solucao', 'order' => request('order') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
-                            Prazo de Solução ▼
+                            Prazo {!! request('order') === 'asc' ? '🔼' : '🔽' !!}
                         </a>
                     </th>
                     <th>Data de Solução</th>
@@ -57,16 +59,20 @@
                         <td>{{ $chamado->titulo }}</td>
                         <td>{{ $chamado->categoria->nome }}</td>
                         <td>{{ Str::limit($chamado->descricao, 50) }}</td>
-                        <td>{{ $chamado->situacao->nome }}</td>
+                        <td><span class="badge bg-info">{{ $chamado->situacao->nome }}</span></td>
                         <td>{{ $chamado->created_at->format('d/m/Y') }}</td>
                         <td>{{ $chamado->prazo_solucao->format('d/m/Y') }}</td>
-                        <td>{{ $chamado->data_solucao ? $chamado->data_solucao->format('d/m/Y') : 'Não resolvido' }}</td>
                         <td>
                             @if($chamado->data_solucao)
-                                <span class="text-success fs-4">✔️</span>
+                                <span class="text-success fw-bold">✔️ {{ $chamado->data_solucao->format('d/m/Y') }}</span>
                             @else
-                                <a href="{{ route('chamados.show', $chamado->id) }}" class="btn btn-primary btn-sm">Visualizar</a>
+                                <span class="text-danger fw-bold">⏳ Pendente</span>
                             @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('chamados.show', $chamado->id) }}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
                         </td>
                     </tr>
                 @empty
@@ -80,7 +86,7 @@
 
     {{-- Paginação --}}
     <div class="d-flex justify-content-center mt-3">
-        {{ $chamados->appends(request()->query())->links() }}
+        {{ $chamados->appends(request()->query())->links('pagination::bootstrap-5') }}
     </div>
 </div>
 

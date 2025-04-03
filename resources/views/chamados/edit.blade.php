@@ -30,8 +30,8 @@
                     <div class="col-md-6">
                         <label class="form-label"><strong>Situação:</strong></label>
                         <select class="form-select" name="situacao_id" id="situacao">
-                            <option value="1" {{ $chamado->situacao_id == 1 ? 'selected' : '' }}>Pendente</option>
-                            <option value="2" {{ $chamado->situacao_id == 2 ? 'selected' : '' }}>Resolvido</option>
+                            <option value="2" {{ $chamado->situacao_id == 2 ? 'selected' : '' }}>Pendente</option>
+                            <option value="3" {{ $chamado->situacao_id == 3 ? 'selected' : '' }}>Resolvido</option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -52,7 +52,7 @@
 <script>
     document.getElementById('situacao').addEventListener('change', function () {
         let dataSolucao = document.getElementById('data_solucao');
-        if (this.value === '2') {
+        if (this.value === '3') {
             let hoje = new Date().toLocaleDateString('pt-BR');
             dataSolucao.value = hoje;
         } else {

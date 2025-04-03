@@ -60,7 +60,7 @@ class ChamadoController extends Controller {
         ]);
     
         $chamado->situacao_id = $request->situacao_id;
-        $chamado->data_solucao = $request->situacao_id == 2 ? now() : null;
+        $chamado->data_solucao = $request->situacao_id == 3 ? now() : null;
         $chamado->save();
     
         return redirect()->route('chamados.index')->with('success', 'Chamado atualizado com sucesso!');

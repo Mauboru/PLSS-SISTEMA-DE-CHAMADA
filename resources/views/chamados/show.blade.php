@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <p><strong>📂 Categoria:</strong> {{ $chamado->categoria->nome }}</p>
-                    <p><strong>📅 Data de Criação:</strong> {{ $chamado->created_at->format('d/m/Y H:i') }}</p>
+                    <p><strong>📅 Data de Criação:</strong> {{ $chamado->created_at->format('d/m/Y') }}</p>
                     <p><strong>⏳ Prazo de Solução:</strong> {{ $chamado->prazo_solucao->format('d/m/Y') }}</p>
                 </div>
                 <div class="col-md-6">
